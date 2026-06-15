@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { UlidService } from '../../common/ulid.service';
 import { CatalogRepository } from '../domain/catalog.repository';
 import { Product } from '../domain/product.entity';
-import { Money, Slug } from '../domain/value-objects';
+import { Slug } from '../domain/value-objects';
+import { LogActionUseCase } from '../../audit-log/application/log-action.use-case';
 
 export interface CreateProductInput {
   tenantId: string;
@@ -36,6 +37,7 @@ export class CreateProductUseCase {
   constructor(
     private readonly catalogRepository: CatalogRepository,
     private readonly ulidService: UlidService,
+    private readonly logAction: LogActionUseCase,
   ) {}
 
   async execute(input: CreateProductInput): Promise<CreateProductResult> {
@@ -57,6 +59,15 @@ export class CreateProductUseCase {
     });
 
     await this.catalogRepository.saveProduct(product);
+
+    await this.logAction.execute({
+      tenantId: input.tenantId,
+      storeId: input.storeId,
+      entityType: 'product',
+      entityId: product.id,
+      action: 'product.created',
+      newValue: { name: input.name, slug: input.slug } as any,
+    });
 
     return { product };
   }
