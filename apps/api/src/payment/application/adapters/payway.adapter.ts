@@ -8,6 +8,24 @@ import type {
 } from '../../domain/payment-provider.interface';
 import type { Money } from '@commerce/shared';
 
+interface PaywayCreateResponse {
+  id: { toString(): string };
+  init_point?: string;
+  checkout_url?: string;
+}
+
+interface PaywayStatusResponse {
+  status: string;
+  id: { toString(): string };
+  payment_id?: { toString(): string };
+  amount?: number;
+}
+
+interface PaywayRefundResponse {
+  id: { toString(): string };
+  status: string;
+}
+
 @Injectable()
 export class PaywayAdapter implements PaymentProvider {
   private apiKey: string = '';
@@ -43,11 +61,11 @@ export class PaywayAdapter implements PaymentProvider {
       throw new Error(`Payway API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as PaywayCreateResponse;
 
     return {
       sessionId: data.id?.toString(),
-      url: data.init_point ?? data.checkout_url,
+      url: data.init_point ?? data.checkout_url ?? '',
       status: 'PENDING',
     };
   }
@@ -62,7 +80,7 @@ export class PaywayAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Payway API error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as PaywayStatusResponse;
     return data.status;
   }
 
@@ -84,7 +102,7 @@ export class PaywayAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Payway refund error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as PaywayRefundResponse;
 
     return {
       transactionId: data.id?.toString(),

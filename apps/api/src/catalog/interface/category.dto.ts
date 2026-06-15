@@ -3,8 +3,8 @@ import { IsString, IsOptional, IsBoolean, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateCategoryDto {
-  @ApiProperty() @IsString() name: string;
-  @ApiProperty() @IsString() slug: string;
+  @ApiProperty() @IsString() name!: string;
+  @ApiProperty() @IsString() slug!: string;
   @ApiPropertyOptional() @IsOptional() @IsString() description?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() imageUrl?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() parentId?: string;

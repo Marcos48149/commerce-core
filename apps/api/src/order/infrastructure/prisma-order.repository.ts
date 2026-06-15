@@ -123,7 +123,7 @@ export class PrismaOrderRepository implements OrderRepository {
         couponCode: data.couponCode,
         notes: data.notes,
         metadata: data.metadata as Prisma.InputJsonValue,
-        snapshot: data.snapshot as Prisma.InputJsonValue,
+        snapshot: data.snapshot as unknown as Prisma.InputJsonValue,
         items: {
           create: data.items.map((item: any) => ({
             id: item.id,

@@ -85,7 +85,7 @@ export class ProductController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @RequirePermission('product.write')
   async delete(@Param('id') id: string, @CurrentUser() user: AuthUser) {
-    await this.deleteProduct.execute({ id, storeId: user.storeId! });
+    await this.deleteProduct.execute({ id, storeId: user.storeId!, tenantId: user.tenantId });
   }
 
   @Post(':productId/variants')

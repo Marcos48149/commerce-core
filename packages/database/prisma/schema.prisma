@@ -63,6 +63,9 @@ model Tenant {
   stores    Store[]
   webhooks  WebhookEndpoint[]
   auditLogs AuditLog[]
+  plans     Plan[]
+  admins    Admin[]
+  roles     Role[]
 }
 
 model Plan {
@@ -80,6 +83,7 @@ model Plan {
   deletedAt     DateTime?
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
+  stores Store[]
 
   @@index([tenantId])
 }
@@ -142,6 +146,7 @@ model Admin {
   store     Store?      @relation(fields: [storeId], references: [id])
   roles     AdminRole[]
   auditLogs AuditLog[]
+  apiKeys   ApiKey[]
 
   @@index([tenantId])
   @@index([storeId])
@@ -590,6 +595,7 @@ model ShippingMethod {
   updatedAt    DateTime @updatedAt
   deletedAt    DateTime?
 
+  store Store @relation(fields: [storeId], references: [id])
   zones ShippingZone[]
 
   @@index([tenantId])
@@ -611,9 +617,13 @@ model ShippingZone {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
+  storeId String @db.VarChar(26)
+  store   Store  @relation(fields: [storeId], references: [id])
+
   method ShippingMethod @relation(fields: [shippingMethodId], references: [id], onDelete: Cascade)
 
   @@index([shippingMethodId])
+  @@index([storeId])
 }
 
 // ─── PROMOTION ────────────────────────────────────────────────────────────────
@@ -640,6 +650,7 @@ model Promotion {
   updatedAt       DateTime      @updatedAt
   deletedAt       DateTime?
 
+  store  Store @relation(fields: [storeId], references: [id])
   coupons  Coupon[]
   usages   PromotionUsage[]
 
@@ -662,6 +673,7 @@ model Coupon {
   updatedAt     DateTime @updatedAt
   deletedAt     DateTime?
 
+  store     Store     @relation(fields: [storeId], references: [id])
   promotion Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
 
   @@unique([storeId, code])
@@ -701,18 +713,24 @@ model AuditLog {
   newValue   Json?
   ipAddress  String?  @db.VarChar(45)
   userAgent  String?  @db.Text
+  productId  String?  @db.VarChar(26)
+  orderId    String?  @db.VarChar(26)
   metadata   Json     @default("{}")
   createdAt  DateTime @default(now())
 
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-  store  Store? @relation(fields: [storeId], references: [id])
-  admin  Admin? @relation(fields: [adminId], references: [id])
+  tenant  Tenant   @relation(fields: [tenantId], references: [id])
+  store   Store?   @relation(fields: [storeId], references: [id])
+  admin   Admin?   @relation(fields: [adminId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
+  order   Order?   @relation(fields: [orderId], references: [id])
 
   @@index([tenantId])
   @@index([storeId])
   @@index([entityType, entityId])
   @@index([action])
   @@index([createdAt])
+  @@index([productId])
+  @@index([orderId])
 }
 
 // ─── WEBHOOK ──────────────────────────────────────────────────────────────────

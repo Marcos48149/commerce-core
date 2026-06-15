@@ -8,6 +8,23 @@ import type {
 } from '../../domain/payment-provider.interface';
 import type { Money } from '@commerce/shared';
 
+interface NaranjaXCreateResponse {
+  payment_id: { toString(): string };
+  redirect_url: string;
+}
+
+interface NaranjaXStatusResponse {
+  status: string;
+  id: { toString(): string };
+  transaction_id?: { toString(): string };
+  amount?: number;
+}
+
+interface NaranjaXRefundResponse {
+  id: { toString(): string };
+  status: string;
+}
+
 @Injectable()
 export class NaranjaXAdapter implements PaymentProvider {
   private apiKey: string = '';
@@ -40,7 +57,7 @@ export class NaranjaXAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Naranja X API error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as NaranjaXCreateResponse;
 
     return {
       sessionId: data.payment_id?.toString(),
@@ -59,7 +76,7 @@ export class NaranjaXAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Naranja X API error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as NaranjaXStatusResponse;
     return data.status;
   }
 
@@ -81,7 +98,7 @@ export class NaranjaXAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Naranja X refund error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as NaranjaXRefundResponse;
 
     return {
       transactionId: data.id?.toString(),
