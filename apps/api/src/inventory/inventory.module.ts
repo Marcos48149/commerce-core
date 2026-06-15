@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { IamModule } from '../iam/iam.module';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 import { InventoryRepository } from './domain/inventory.repository';
 import { PrismaInventoryRepository } from './infrastructure/prisma-inventory.repository';
 import { ReserveStockHandler } from './application/commands/reserve-stock.handler';
@@ -12,7 +13,7 @@ import { InventorySaga } from './application/inventory-saga';
 import { InventoryController } from './interface/inventory.controller';
 
 @Module({
-  imports: [CqrsModule, IamModule],
+  imports: [CqrsModule, IamModule, AuditLogModule],
   controllers: [InventoryController],
   providers: [
     { provide: InventoryRepository, useClass: PrismaInventoryRepository },

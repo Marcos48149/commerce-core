@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CatalogRepository } from '../domain/catalog.repository';
 import { Product } from '../domain/product.entity';
 import { Slug } from '../domain/value-objects';
+import { LogActionUseCase } from '../../audit-log/application/log-action.use-case';
 
 export interface UpdateProductInput {
   id: string;
@@ -22,6 +23,7 @@ export interface UpdateProductResult {
 export class UpdateProductUseCase {
   constructor(
     private readonly catalogRepository: CatalogRepository,
+    private readonly logAction: LogActionUseCase,
   ) {}
 
   async execute(input: UpdateProductInput): Promise<UpdateProductResult> {
@@ -29,6 +31,8 @@ export class UpdateProductUseCase {
     if (!product || product.isDeleted()) {
       throw new NotFoundException('Product not found');
     }
+
+    const oldSnapshot = { name: product.name, isActive: product.isActive };
 
     if (input.slug) {
       const slug = Slug.create(input.slug);
@@ -47,6 +51,16 @@ export class UpdateProductUseCase {
     });
 
     await this.catalogRepository.updateProduct(product);
+
+    await this.logAction.execute({
+      tenantId: input.tenantId,
+      storeId: input.storeId,
+      entityType: 'product',
+      entityId: product.id,
+      action: 'product.updated',
+      oldValue: oldSnapshot as any,
+      newValue: { name: product.name, isActive: product.isActive } as any,
+    });
 
     return { product };
   }
