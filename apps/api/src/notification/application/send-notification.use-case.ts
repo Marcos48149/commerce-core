@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ulid } from 'ulidx';
 import { NotificationRepository } from '../domain/notification.repository';
 import { EmailProvider } from '../domain/notification.entity';
@@ -18,7 +18,7 @@ export class SendNotificationUseCase {
 
   constructor(
     private readonly notificationRepository: NotificationRepository,
-    private readonly emailProvider: EmailProvider,
+    @Inject('EmailProvider') private readonly emailProvider: EmailProvider,
   ) {}
 
   async execute(input: SendNotificationInput): Promise<void> {

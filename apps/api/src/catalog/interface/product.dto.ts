@@ -2,22 +2,10 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsBoolean, IsObject, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class CreateProductDto {
-  @ApiProperty() @IsString() name: string;
-  @ApiProperty() @IsString() slug: string;
-  @ApiPropertyOptional() @IsOptional() @IsString() description?: string;
-  @ApiPropertyOptional() @IsOptional() @IsObject() metadata?: Record<string, unknown>;
-
-  @ApiPropertyOptional({ type: [CreateVariantDto] })
-  @IsOptional()
-  @Type(() => CreateVariantDto)
-  variants?: CreateVariantDto[];
-}
-
 export class CreateVariantDto {
-  @ApiProperty() @IsString() sku: string;
-  @ApiProperty() @IsString() name: string;
-  @ApiProperty() @IsNumber() @Min(0) price: number;
+  @ApiProperty() @IsString() sku!: string;
+  @ApiProperty() @IsString() name!: string;
+  @ApiProperty() @IsNumber() @Min(0) price!: number;
   @ApiPropertyOptional() @IsOptional() @IsString() currency?: string;
   @ApiPropertyOptional() @IsOptional() @IsNumber() compareAtPrice?: number;
   @ApiPropertyOptional() @IsOptional() @IsNumber() costPrice?: number;
@@ -25,6 +13,18 @@ export class CreateVariantDto {
   @ApiPropertyOptional() @IsOptional() @IsString() weightUnit?: 'g' | 'kg' | 'lb' | 'oz';
   @ApiPropertyOptional() @IsOptional() @IsString() barcode?: string;
   @ApiPropertyOptional() @IsOptional() @IsNumber() sortOrder?: number;
+}
+
+export class CreateProductDto {
+  @ApiProperty() @IsString() name!: string;
+  @ApiProperty() @IsString() slug!: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() description?: string;
+  @ApiPropertyOptional() @IsOptional() @IsObject() metadata?: Record<string, unknown>;
+
+  @ApiPropertyOptional({ type: [CreateVariantDto] })
+  @IsOptional()
+  @Type(() => CreateVariantDto)
+  variants?: CreateVariantDto[];
 }
 
 export class UpdateProductDto {
@@ -36,9 +36,9 @@ export class UpdateProductDto {
 }
 
 export class AddVariantDto {
-  @ApiProperty() @IsString() sku: string;
-  @ApiProperty() @IsString() name: string;
-  @ApiProperty() @IsNumber() @Min(0) price: number;
+  @ApiProperty() @IsString() sku!: string;
+  @ApiProperty() @IsString() name!: string;
+  @ApiProperty() @IsNumber() @Min(0) price!: number;
   @ApiPropertyOptional() @IsOptional() @IsString() currency?: string;
   @ApiPropertyOptional() @IsOptional() @IsNumber() compareAtPrice?: number;
   @ApiPropertyOptional() @IsOptional() @IsNumber() costPrice?: number;

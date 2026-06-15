@@ -6,10 +6,10 @@ import { Type } from 'class-transformer';
 import { PromotionType } from '../domain/promotion.entity';
 
 export class CreatePromotionDto {
-  @ApiProperty() @IsString() name: string;
-  @ApiProperty({ enum: PromotionType }) @IsEnum(PromotionType) type: PromotionType;
+  @ApiProperty() @IsString() name!: string;
+  @ApiProperty({ enum: PromotionType }) @IsEnum(PromotionType) type!: PromotionType;
   @ApiPropertyOptional() @IsOptional() @IsObject() config?: Record<string, unknown>;
-  @ApiProperty() @IsDateString() startsAt: string;
+  @ApiProperty() @IsDateString() startsAt!: string;
   @ApiPropertyOptional() @IsOptional() @IsDateString() endsAt?: string;
   @ApiPropertyOptional() @IsOptional() @IsNumber() @Min(0) minQuantity?: number;
   @ApiPropertyOptional() @IsOptional() @IsNumber() @Min(0) @Type(() => Number) minCartAmount?: number;
@@ -43,11 +43,11 @@ export class PromotionQueryDto {
 }
 
 export class AddCouponDto {
-  @ApiProperty() @IsString() code: string;
+  @ApiProperty() @IsString() code!: string;
   @ApiPropertyOptional() @IsOptional() @IsNumber() @Min(0) maxUsage?: number;
   @ApiPropertyOptional() @IsOptional() @IsNumber() @Min(0) maxPerCustomer?: number;
 }
 
 export class CouponQueryDto {
-  @ApiProperty() @IsString() code: string;
+  @ApiProperty() @IsString() code!: string;
 }

@@ -15,11 +15,14 @@ export interface PaginatedPromotions {
   totalPages: number;
 }
 
-export interface PromotionRepository {
-  findById(id: string, storeId: string): Promise<Promotion | null>;
-  findByStore(storeId: string, filter?: PromotionFilter): Promise<PaginatedPromotions>;
-  findActiveByStore(storeId: string): Promise<Promotion[]>;
-  save(promotion: Promotion): Promise<void>;
-  update(promotion: Promotion): Promise<void>;
-  delete(id: string, storeId: string): Promise<void>;
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export abstract class PromotionRepository {
+  abstract findById(id: string, storeId: string): Promise<Promotion | null>;
+  abstract findByStore(storeId: string, filter?: PromotionFilter): Promise<PaginatedPromotions>;
+  abstract findActiveByStore(storeId: string): Promise<Promotion[]>;
+  abstract save(promotion: Promotion): Promise<void>;
+  abstract update(promotion: Promotion): Promise<void>;
+  abstract delete(id: string, storeId: string): Promise<void>;
 }

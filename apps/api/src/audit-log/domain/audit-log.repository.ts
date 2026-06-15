@@ -19,9 +19,12 @@ export interface PaginatedAuditLogs {
   totalPages: number;
 }
 
-export interface AuditLogRepository {
-  findById(id: string): Promise<AuditLog | null>;
-  findByStore(storeId: string, filter?: AuditLogFilter): Promise<PaginatedAuditLogs>;
-  findByTenant(tenantId: string, filter?: AuditLogFilter): Promise<PaginatedAuditLogs>;
-  save(log: AuditLog): Promise<void>;
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export abstract class AuditLogRepository {
+  abstract findById(id: string): Promise<AuditLog | null>;
+  abstract findByStore(storeId: string, filter?: AuditLogFilter): Promise<PaginatedAuditLogs>;
+  abstract findByTenant(tenantId: string, filter?: AuditLogFilter): Promise<PaginatedAuditLogs>;
+  abstract save(log: AuditLog): Promise<void>;
 }

@@ -5,11 +5,11 @@ import {
 import { Type } from 'class-transformer';
 
 export class CreateWebhookDto {
-  @ApiProperty() @IsUrl() url: string;
-  @ApiProperty() @IsString() secret: string;
+  @ApiProperty() @IsUrl() url!: string;
+  @ApiProperty() @IsString() secret!: string;
   @ApiProperty({ type: [String] })
   @IsArray() @ArrayMinSize(1) @IsString({ each: true })
-  events: string[];
+  events!: string[];
   @ApiPropertyOptional() @IsOptional() @IsNumber() @Min(0) retryCount?: number;
   @ApiPropertyOptional() @IsOptional() @IsNumber() @Min(100) timeoutMs?: number;
 }

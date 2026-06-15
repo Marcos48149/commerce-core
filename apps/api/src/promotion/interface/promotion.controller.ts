@@ -121,7 +121,7 @@ export class PromotionController {
 
   @Post('coupons/validate')
   @RequirePermission('promotion.read')
-  async validateCoupon(
+  async validateCouponEndpoint(
     @Body() dto: CouponQueryDto,
     @CurrentUser() user: AuthUser,
   ) {
