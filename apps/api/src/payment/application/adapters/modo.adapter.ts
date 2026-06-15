@@ -8,6 +8,23 @@ import type {
 } from '../../domain/payment-provider.interface';
 import type { Money } from '@commerce/shared';
 
+interface ModoCreateResponse {
+  session_id: { toString(): string };
+  checkout_url: string;
+}
+
+interface ModoStatusResponse {
+  status: string;
+  id: { toString(): string };
+  payment_id?: { toString(): string };
+  amount?: number;
+}
+
+interface ModoRefundResponse {
+  id: { toString(): string };
+  status: string;
+}
+
 @Injectable()
 export class ModoAdapter implements PaymentProvider {
   private apiKey: string = '';
@@ -40,7 +57,7 @@ export class ModoAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Modo API error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as ModoCreateResponse;
 
     return {
       sessionId: data.session_id?.toString(),
@@ -59,7 +76,7 @@ export class ModoAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Modo API error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as ModoStatusResponse;
     return data.status;
   }
 
@@ -81,7 +98,7 @@ export class ModoAdapter implements PaymentProvider {
     });
 
     if (!response.ok) throw new Error(`Modo refund error: ${response.statusText}`);
-    const data = await response.json();
+    const data = await response.json() as ModoRefundResponse;
 
     return {
       transactionId: data.id?.toString(),

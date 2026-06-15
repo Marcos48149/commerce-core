@@ -19,6 +19,10 @@ export class ApiKeyStrategy extends PassportStrategy(Strategy, 'api-key') {
     super();
   }
 
+  async validate(): Promise<unknown> {
+    return null;
+  }
+
   override authenticate(req: Request) {
     const apiKey = req.headers['x-api-key'] as string | undefined;
 

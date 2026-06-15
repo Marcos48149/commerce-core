@@ -193,6 +193,7 @@ export class Order {
       total: this._total,
       couponCode: this._couponCode,
       notes: this._notes,
+      metadata: this._metadata,
       snapshot: this._snapshot,
       items: this._items,
       createdAt: this.createdAt,

@@ -12,11 +12,14 @@ export interface StockAdjustmentLog {
   createdAt: Date;
 }
 
-export interface InventoryRepository {
-  findByVariant(variantId: string, storeId: string): Promise<Stock | null>;
-  findByProduct(productId: string, storeId: string): Promise<Stock[]>;
-  findLowStock(storeId: string, threshold?: number): Promise<Stock[]>;
-  save(stock: Stock): Promise<void>;
-  update(stock: Stock): Promise<void>;
-  createAdjustmentLog(log: Omit<StockAdjustmentLog, 'id' | 'createdAt'>): Promise<void>;
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export abstract class InventoryRepository {
+  abstract findByVariant(variantId: string, storeId: string): Promise<Stock | null>;
+  abstract findByProduct(productId: string, storeId: string): Promise<Stock[]>;
+  abstract findLowStock(storeId: string, threshold?: number): Promise<Stock[]>;
+  abstract save(stock: Stock): Promise<void>;
+  abstract update(stock: Stock): Promise<void>;
+  abstract createAdjustmentLog(log: Omit<StockAdjustmentLog, 'id' | 'createdAt'>): Promise<void>;
 }

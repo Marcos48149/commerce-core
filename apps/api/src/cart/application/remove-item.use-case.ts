@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Cart } from '../domain/cart.entity';
 import { CartRepository } from '../domain/cart.repository';
 
 export interface RemoveItemInput {

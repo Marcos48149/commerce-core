@@ -11,7 +11,10 @@ export interface NotificationTemplateData {
   deletedAt: Date | null;
 }
 
-export interface NotificationRepository {
-  findTemplateByType(type: string, storeId: string): Promise<NotificationTemplateData | null>;
-  saveLog(log: NotificationLogData): Promise<void>;
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export abstract class NotificationRepository {
+  abstract findTemplateByType(type: string, storeId: string): Promise<NotificationTemplateData | null>;
+  abstract saveLog(log: NotificationLogData): Promise<void>;
 }

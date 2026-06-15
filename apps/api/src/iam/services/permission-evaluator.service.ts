@@ -41,7 +41,7 @@ export class PermissionEvaluator {
       },
     });
 
-    return adminRoles.some((ar) => {
+    return adminRoles.some((ar: any) => {
       if (ar.role.permissions.length === 0) return false;
 
       if (scope?.storeId && ar.role.scope === 'store') {

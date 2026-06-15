@@ -17,12 +17,15 @@ export interface PaginatedOrders {
   totalPages: number;
 }
 
-export interface OrderRepository {
-  findById(id: string, storeId: string): Promise<Order | null>;
-  findByStore(storeId: string, filter: OrderFilter): Promise<PaginatedOrders>;
-  findByCustomer(customerId: string, storeId: string): Promise<Order[]>;
-  findByOrderNumber(storeId: string, orderNumber: number): Promise<Order | null>;
-  findMaxOrderNumber(storeId: string): Promise<number>;
-  save(order: Order): Promise<void>;
-  update(order: Order): Promise<void>;
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export abstract class OrderRepository {
+  abstract findById(id: string, storeId: string): Promise<Order | null>;
+  abstract findByStore(storeId: string, filter: OrderFilter): Promise<PaginatedOrders>;
+  abstract findByCustomer(customerId: string, storeId: string): Promise<Order[]>;
+  abstract findByOrderNumber(storeId: string, orderNumber: number): Promise<Order | null>;
+  abstract findMaxOrderNumber(storeId: string): Promise<number>;
+  abstract save(order: Order): Promise<void>;
+  abstract update(order: Order): Promise<void>;
 }

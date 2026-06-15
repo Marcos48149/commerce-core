@@ -8,6 +8,25 @@ import type {
 } from '../../domain/payment-provider.interface';
 import type { Money } from '@commerce/shared';
 
+interface MercadoPagoCreateResponse {
+  id: { toString(): string };
+  init_point?: string;
+  sandbox_init_point?: string;
+}
+
+interface MercadoPagoStatusResponse {
+  status: string;
+  id: { toString(): string };
+  transaction_amount?: number;
+  data?: { id: { toString(): string }; amount?: number };
+  action?: string;
+}
+
+interface MercadoPagoRefundResponse {
+  id: { toString(): string };
+  status: string;
+}
+
 @Injectable()
 export class MercadoPagoAdapter implements PaymentProvider {
   private apiKey: string = '';
@@ -43,11 +62,11 @@ export class MercadoPagoAdapter implements PaymentProvider {
       throw new Error(`Mercado Pago API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as MercadoPagoCreateResponse;
 
     return {
       sessionId: data.id.toString(),
-      url: data.init_point ?? data.sandbox_init_point,
+      url: data.init_point ?? data.sandbox_init_point ?? '',
       status: 'PENDING',
     };
   }
@@ -67,7 +86,7 @@ export class MercadoPagoAdapter implements PaymentProvider {
       throw new Error(`Mercado Pago API error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as MercadoPagoStatusResponse;
     return data.status;
   }
 
@@ -92,7 +111,7 @@ export class MercadoPagoAdapter implements PaymentProvider {
       throw new Error(`Mercado Pago refund error: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as MercadoPagoRefundResponse;
 
     return {
       transactionId: data.id.toString(),

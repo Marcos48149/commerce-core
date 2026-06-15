@@ -21,32 +21,32 @@ export class OrderQueryDto {
 }
 
 export class OrderResponseDto {
-  id: string;
-  storeId: string;
-  customerId: string | null;
-  orderNumber: number;
-  status: string;
-  currency: string;
-  subtotal: number;
-  discount: number;
-  shipping: number;
-  tax: number;
-  total: number;
-  couponCode: string | null;
-  notes: string | null;
-  items: OrderItemDto[];
-  createdAt: Date;
-  updatedAt: Date;
+  id!: string;
+  storeId!: string;
+  customerId!: string | null;
+  orderNumber!: number;
+  status!: string;
+  currency!: string;
+  subtotal!: number;
+  discount!: number;
+  shipping!: number;
+  tax!: number;
+  total!: number;
+  couponCode!: string | null;
+  notes!: string | null;
+  items!: OrderItemDto[];
+  createdAt!: Date;
+  updatedAt!: Date;
 }
 
 export class OrderItemDto {
-  id: string;
-  variantId: string;
-  productId: string;
-  productName: string;
-  variantName: string;
-  sku: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
+  id!: string;
+  variantId!: string;
+  productId!: string;
+  productName!: string;
+  variantName!: string;
+  sku!: string;
+  quantity!: number;
+  unitPrice!: number;
+  totalPrice!: number;
 }
