@@ -1,0 +1,31 @@
+project: commerce-core
+stack:
+  - Node.js >=20
+  - pnpm workspace (pnpm@9.15.4)
+  - NestJS (apps/api)
+  - Next.js (apps/dashboard)
+  - Prisma ORM (packages/database)
+  - PostgreSQL 16
+  - Turbo 2.x (monorepo build)
+  - TypeScript 5.8
+  - SWC (NestJS builder)
+strict_tdd: false
+testing:
+  test_runner: jest (apps/api e2e)
+  test_layers:
+    unit: false
+    integration: false
+    e2e: true
+  coverage: false
+  quality_tools:
+    linter: turbo lint
+    type_checker: typescript (tsc)
+    formatter: prettier
+context: |
+  Multi-tenant e-commerce platform with 4 phases implemented:
+  Phase 1: Infrastructure (monorepo, Prisma schema, auth, RBAC)
+  Phase 2: Catalog & Inventory (CQRS pattern)
+  Phase 3: Cart, Order, Payment, Shipping (saga pattern)
+  Phase 4: Promotions, Webhooks, Audit Log, Notifications
+  All phases compiled and merged to main. API runs on port 4000.
+  Next: customer-identity, tenant-store, and backoffice IAM CRUD modules.

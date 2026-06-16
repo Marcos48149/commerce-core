@@ -12,6 +12,7 @@ import { PromotionModule } from './promotion/promotion.module';
 import { WebhookModule } from './webhook/webhook.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { NotificationModule } from './notification/notification.module';
+import { CustomerIdentityModule } from './customer-identity/customer-identity.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { NotificationModule } from './notification/notification.module';
     CatalogModule, InventoryModule,
     CartModule, OrderModule, PaymentModule, ShippingModule,
     PromotionModule, WebhookModule, AuditLogModule, NotificationModule,
+    CustomerIdentityModule,
   ],
 })
 export class AppModule {}
