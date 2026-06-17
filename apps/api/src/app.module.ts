@@ -13,6 +13,7 @@ import { WebhookModule } from './webhook/webhook.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { NotificationModule } from './notification/notification.module';
 import { CustomerIdentityModule } from './customer-identity/customer-identity.module';
+import { TenantStoreModule } from './tenant-store/tenant-store.module';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { CustomerIdentityModule } from './customer-identity/customer-identity.mo
     CatalogModule, InventoryModule,
     CartModule, OrderModule, PaymentModule, ShippingModule,
     PromotionModule, WebhookModule, AuditLogModule, NotificationModule,
-    CustomerIdentityModule,
+    CustomerIdentityModule, TenantStoreModule,
   ],
 })
 export class AppModule {}
