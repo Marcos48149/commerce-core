@@ -1,8 +1,15 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import type { PaginatedResult, Ulid } from '@commerce/shared';
+import type { PaginatedResult } from '@commerce/shared';
+
+interface ApiWrapper<T> {
+  success: boolean;
+  data: T;
+  timestamp: string;
+}
 
 export class ApiClient {
   private readonly http: AxiosInstance;
+  private _refreshToken?: string;
 
   constructor(baseURL: string, private token?: string) {
     this.http = axios.create({
@@ -19,10 +26,32 @@ export class ApiClient {
     });
 
     this.http.interceptors.response.use(
-      (response: AxiosResponse) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          this.token = undefined;
+      (response: AxiosResponse) => {
+        const body = response.data;
+        if (body && typeof body === 'object' && 'success' in body && 'data' in body && 'timestamp' in body) {
+          response.data = (body as ApiWrapper<unknown>).data;
+        }
+        return response;
+      },
+      async (error) => {
+        const originalRequest = error.config;
+        if (error.response?.status === 401 && this._refreshToken && !originalRequest._retry) {
+          originalRequest._retry = true;
+          try {
+            const baseUrl = this.http.defaults.baseURL || '';
+            const res = await axios.post(`${baseUrl}/auth/refresh`, {
+              refreshToken: this._refreshToken,
+            });
+            const raw = res.data;
+            const body = (raw?.data ? raw.data : raw) as { accessToken: string; refreshToken: string };
+            this.token = body.accessToken;
+            this._refreshToken = body.refreshToken;
+            originalRequest.headers.Authorization = `Bearer ${this.token}`;
+            return this.http(originalRequest);
+          } catch {
+            this.token = undefined;
+            this._refreshToken = undefined;
+          }
         }
         return Promise.reject(error);
       },
@@ -31,6 +60,17 @@ export class ApiClient {
 
   setToken(token: string | undefined): void {
     this.token = token;
+  }
+
+  setRefreshToken(token: string | undefined): void {
+    this._refreshToken = token;
+  }
+
+  setTokens(token: string | undefined, refreshToken?: string): void {
+    this.token = token;
+    if (refreshToken !== undefined) {
+      this._refreshToken = refreshToken;
+    }
   }
 
   async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {

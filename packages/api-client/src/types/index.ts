@@ -10,6 +10,7 @@ export interface LoginResponse {
     id: string;
     email: string;
     displayName: string;
+    isSuperAdmin: boolean;
   };
 }
 

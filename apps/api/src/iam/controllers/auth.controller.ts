@@ -58,6 +58,7 @@ export class AuthController {
         id: admin.id,
         email: admin.email,
         displayName: admin.displayName,
+        isSuperAdmin: admin.isSuperAdmin,
       },
     };
   }

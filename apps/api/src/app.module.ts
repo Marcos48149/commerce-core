@@ -14,6 +14,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
 import { NotificationModule } from './notification/notification.module';
 import { CustomerIdentityModule } from './customer-identity/customer-identity.module';
 import { TenantStoreModule } from './tenant-store/tenant-store.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { TenantStoreModule } from './tenant-store/tenant-store.module';
     CatalogModule, InventoryModule,
     CartModule, OrderModule, PaymentModule, ShippingModule,
     PromotionModule, WebhookModule, AuditLogModule, NotificationModule,
-    CustomerIdentityModule, TenantStoreModule,
+    CustomerIdentityModule, TenantStoreModule, DashboardModule,
   ],
 })
 export class AppModule {}

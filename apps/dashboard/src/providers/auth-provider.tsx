@@ -8,7 +8,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
-import { getApiClient } from '@/lib/api';
+import { getApiClient, resetApiClient } from '@/lib/api';
 import {
   getStoredAuth,
   storeAuth,
@@ -16,6 +16,8 @@ import {
   isAuthenticated,
   type AuthSession,
 } from '@/lib/auth';
+import { AUTH_KEY } from '@/lib/constants';
+import type { LoginResponse } from '@commerce/api-client';
 
 interface AuthContextValue {
   session: AuthSession | null;
@@ -41,12 +43,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     const client = getApiClient();
-    const result = await client.post<AuthSession>('/auth/login', { email, password });
-    storeAuth(result);
-    setSession(result);
+    const result = await client.post<LoginResponse>('/auth/login', { email, password });
+    const sessionData: AuthSession = {
+      adminId: result.admin.id,
+      email: result.admin.email,
+      displayName: result.admin.displayName,
+      isSuperAdmin: result.admin.isSuperAdmin,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+    };
+    client.setTokens(sessionData.accessToken, sessionData.refreshToken);
+    storeAuth(sessionData);
+    setSession(sessionData);
   }, []);
 
   const logout = useCallback(() => {
+    resetApiClient();
     clearAuth();
     setSession(null);
   }, []);
